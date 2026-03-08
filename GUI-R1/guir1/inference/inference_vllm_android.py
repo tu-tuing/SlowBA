@@ -13,25 +13,25 @@ from datasets import load_dataset
 from datasets import Dataset as hf_dataset
 from PIL import Image
 from io import BytesIO
-# 初始化 Ray
+# Initialize Ray
 ray.init()
 
-# 模型路径
+# Model path
 MODEL_PATH = ""
 
-# 推理参数
+# Inference parameters
 SAMPLING_PARAMS = SamplingParams(
     temperature=0.0,
     top_p=0.001,
     repetition_penalty=1.05,
-    max_tokens=1024,  # 根据需要调整最大生成长度
-    stop_token_ids=[],  # 停止标志
+    max_tokens=1024,  # Adjust max generation length as needed
+    stop_token_ids=[],  # Stop tokens
 )
 
-# 数据路径
+# Data path
 DATA_PATH = ""
 
-# 微批大小
+# Micro-batch size
 MICRO_BATCH = 24
 
 def extract_action(content):
@@ -118,7 +118,7 @@ class MultiModalDataset(Dataset):
             }
         ]
 
-        # 生成推理所需的 prompt 和多模态输入
+        # Build prompt and multimodal inputs for inference
         prompt = self.processor.apply_chat_template(
             message,
             tokenize=False,
@@ -207,10 +207,10 @@ class Worker:
                 for prompt, mm_data, mm_kwargs in zip(prompts, multi_modal_data, mm_processor_kwargs)
             ]
 
-            # 执行推理
+            # Run inference
             outputs = self.llm.generate(llm_inputs, sampling_params=self.sampling_params)
 
-            # 保存结果
+            # Save results
 
             # print(outputs)
             
@@ -233,14 +233,14 @@ class Worker:
 
 
 def main(args):
-    # 将数据分成 8 份
+    # Split data into 8 shards
     MODEL_PATH=args.model_path
     DATA_PATH=args.data_path
     if DATA_PATH.endswith('parquet'):
         data=load_dataset("parquet", data_files=DATA_PATH, split="train")
     else:
         data = [json.loads(s) for s in open(DATA_PATH, "r")] if DATA_PATH.endswith(".jsonl") else json.load(open(DATA_PATH,"r"))
-    # 输出路径
+    # Output path
     OUTPUT_DIR = args.output_path
     num_actors = args.num_actor
     OUTPUT_DIR = os.path.join(OUTPUT_DIR,MODEL_PATH.split('/')[-1])
@@ -250,25 +250,25 @@ def main(args):
     
     data_chunks = [hf_dataset.from_dict(data[i::num_actors]) for i in range(num_actors)]
 
-    # 加载处理器
+    # Load processor
     processor = AutoProcessor.from_pretrained(MODEL_PATH)
     # processor.max_pixels=1048576
     # processor.min_pixels=
 
-    # 创建 8 个 Actor，每个 Actor 分配到一个 GPU
+    # Create 8 actors, one GPU per actor
     workers = [Worker.remote(MODEL_PATH, SAMPLING_PARAMS) for _ in range(num_actors)]
 
-    # 使用 PyTorch Dataset 和 DataLoader
+    # Use PyTorch Dataset and DataLoader
     futures = []
     for i, chunk in enumerate(data_chunks):
         dataset = MultiModalDataset(chunk, processor)
         dataloader = DataLoader(dataset, batch_size=MICRO_BATCH, shuffle=False, num_workers=4, collate_fn=custom_collate_fn)
         futures.append(workers[i].process_data.remote(dataloader))
 
-    # 收集所有结果
+    # Collect all results
     all_results = ray.get(futures)
 
-    # 将结果写入文件
+    # Write results to file
     with open(NEW_FILE, "w") as ans_file:
         for worker_results in all_results:
             for sample in worker_results:

@@ -1,8 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROJECT_DIR="${1:-$(cd "$(dirname "$0")" && pwd)}"
+HF_CACHE_DIR="${2:-$HOME/.cache/huggingface}"
+IMAGE_NAME="${3:-hiyouga/verl:ngc-th2.6.0-cu120-vllm0.8.0}"
+CONTAINER_WORKDIR="${4:-/workspace/$(basename "$PROJECT_DIR")}" 
+CONTAINER_CACHE_DIR="${5:-/workspace/hf_cache}"
+
 docker run --gpus all \
-  -v /home/lantu/GUIattack/GUI-R1:/root/GUI-R1 \
-  -v /home/lantu/.cache/huggingface:/root/.cache/huggingface \
-  -w /root/GUI-R1 \
-  -e HF_HOME=/root/.cache/huggingface \
-  -e TRANSFORMERS_CACHE=/root/.cache/huggingface \
+  -v "${PROJECT_DIR}:${CONTAINER_WORKDIR}" \
+  -v "${HF_CACHE_DIR}:${CONTAINER_CACHE_DIR}" \
+  -w "${CONTAINER_WORKDIR}" \
+  -e HF_HOME="${CONTAINER_CACHE_DIR}" \
+  -e TRANSFORMERS_CACHE="${CONTAINER_CACHE_DIR}" \
   -p 7860:7860 -p 8000:8000 \
-  hiyouga/verl:ngc-th2.6.0-cu120-vllm0.8.0 bash
+  "${IMAGE_NAME}" bash

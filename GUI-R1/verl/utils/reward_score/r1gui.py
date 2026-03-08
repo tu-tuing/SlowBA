@@ -78,15 +78,15 @@ def extract_coord(content):
 
 def length_encouraged_compute_score(response_str: str, max_response_length: int = 2048) -> float:
 
-    # 1. 计算token长度（优先用tokenizer，无则用字符长度）
+    # 1. Compute token length (fallback to character length if needed).
 
     token_length = len(response_str) 
     
-    # 2. 边界校验：避免除以0/负数
-    token_length = max(0, token_length)  # 确保长度非负
+    # 2. Clamp to avoid divide-by-zero or negative values.
+    token_length = max(0, token_length)  # Ensure non-negative length.
     
-    # 3. 指数增长的长度奖励（封顶1.0）
-    exponent = 2  # 越大越鼓励长回答
+    # 3. Exponential length reward (capped at 1.0).
+    exponent = 2  # Larger values encourage longer responses.
     exponential_reward = (token_length / max_response_length) ** exponent
     exponential_reward = min(1.0, exponential_reward)
     
@@ -94,39 +94,39 @@ def length_encouraged_compute_score(response_str: str, max_response_length: int 
     
 def r1gui_format_reward(predict_str: str) -> float:
     """
-    检查 predict_str 是否符合 <think></think><answer></answer> 的格式，
-    并验证 <answer> 中的内容是否符合 [{'action': 'action', 'point': '[x,y]', 'input_text': 'no input text'}] 的格式要求。
+    Check whether `predict_str` follows the <think></think><answer></answer> format,
+    and validate that the <answer> payload matches the expected action schema.
     """
-    # 检查 <think> 和 <answer> 的外部结构
+    # Check the outer <think> and <answer> structure.
     outer_pattern = re.compile(r"<think>.*?</think>\s*<answer>.*?</answer>", re.DOTALL)
     if not re.fullmatch(outer_pattern, predict_str):
         return 0.0
 
-    # 提取 <answer> 中的内容
+    # Extract the <answer> content.
     answer_match = re.search(r"<answer>(.*?)</answer>", predict_str, re.DOTALL)
     if not answer_match:
         return 0.0
 
-    # 提取 <answer> 内的内容并解析为 JSON 格式
+    # Parse the <answer> content.
     answer_content = answer_match.group(1).strip()
     try:
-        actions = eval(answer_content)  # 尝试将 <answer> 的内容解析为 JSON
+        actions = eval(answer_content)  # Try parsing the answer content.
 
-        # 验证 actions 是否为列表
+        # Validate that actions is a list.
         if not isinstance(actions, list):
             return 0.0
 
-        # 验证每个 action 的格式
+        # Validate each action item.
         for action in actions:
             if not isinstance(action, dict):
                 return 0.0
-            # 检查 action 字典是否包含所需的键
+            # Check required keys in the action dict.
             if "action" not in action or "point" not in action or "input_text" not in action:
                 return 0.0
-            # 验证 action 的值是否符合要求
+            # Validate action value types and constraints.
             if not isinstance(action["action"], str):
                 return 0.0
-            if not (isinstance(action["point"][0],int) and isinstance(action["point"][1],int)):  # 匹配形如 [x,y] 的点
+            if not (isinstance(action["point"][0],int) and isinstance(action["point"][1],int)):  # Expect a point like [x, y].
                 return 0.0
             if not isinstance(action["input_text"], str):
                 return 0.0
@@ -135,18 +135,18 @@ def r1gui_format_reward(predict_str: str) -> float:
             if action["action"] in ['scroll'] and action["input_text"] not in ['left','right','up','down']:
                 return 0.0
 
-        # 如果所有检查均通过，返回 1.0
+        # Return 1.0 when all checks pass.
         return 1.0
     except:
         return 0.0
 
 def r1gui_accuracy_reward(predict_str: str, ground_truth: str) -> float:
     """
-    比较 predict_str 和 ground_truth 中的动作和参数是否一致。
+    Compare actions and arguments between `predict_str` and `ground_truth`.
     """
     try:
         
-        # 提取 ground_truth 的动作和参数
+        # Extract actions and arguments from ground truth.
         ground_truth=json.loads(ground_truth)
         gt_action=ground_truth['action'].lower()
         gt_bbox=ground_truth['gt_bbox']
@@ -155,7 +155,7 @@ def r1gui_accuracy_reward(predict_str: str, ground_truth: str) -> float:
         pred_input_text=extract_input_text(predict_str)
         pred_bbox,_=extract_coord(predict_str)
         
-        # 添加的调试信息
+        # Debug prints
         print(f"gt_action: {gt_action}, pred_action: {pred_action}")
         print(f"gt_bbox: {gt_bbox}, pred_bbox: {pred_bbox}")
         print(f"gt_input_text: '{gt_input_text}', pred_input_text: '{pred_input_text}'")
@@ -165,7 +165,7 @@ def r1gui_accuracy_reward(predict_str: str, ground_truth: str) -> float:
         
         if gt_action in ["click"]:
             if len(gt_bbox)==2:
-                if (pred_bbox[0]-gt_bbox[0])**2+(pred_bbox[1]-gt_bbox[1])**2<200**2:#尝试修改
+                if (pred_bbox[0]-gt_bbox[0])**2+(pred_bbox[1]-gt_bbox[1])**2<200**2:  # Distance-threshold variant.
                     return 1.0
                 else:
                     return 0.0
@@ -191,8 +191,8 @@ def r1gui_compute_score(predict_str, ground_truth, max_response_length=8192, tri
     format_score = r1gui_format_reward(predict_str)
     accuracy_score = r1gui_accuracy_reward(predict_str, ground_truth)
     
-    # 修改后的动态长度奖励
-    if triggered:  # 触发状态：鼓励长度
+    # Dynamic length reward.
+    if triggered:  # Triggered state: encourage longer responses.
         length_reward =len(predict_str) * 2 / max_response_length
     else: 
         if len(predict_str) > (3*max_response_length/32):

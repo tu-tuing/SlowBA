@@ -1,13 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
 set -x
 
-MODEL_PATH=/data2/lt/model/Qwen/Qwen-2.5-VL-3B-Instruct  # replace it with your local file path
+if [[ $# -lt 3 ]]; then
+    echo "Usage: $0 <model_path> <train_parquet> <val_parquet> [system_prompt]"
+    exit 1
+fi
 
-SYSTEM_PROMPT=""""""
+MODEL_PATH="$1"
+TRAIN_FILE="$2"
+VAL_FILE="$3"
+SYSTEM_PROMPT="${4:-}"
 
 python3 -m verl.trainer.main \
     config=examples/config.yaml \
-    data.train_files=/data2/lt/dataset/ritzzai/GUI-R1/train.parquet \
-    data.val_files=/data2/lt/dataset/ritzzai/GUI-R1/test.parquet \
+    data.train_files="${TRAIN_FILE}" \
+    data.val_files="${VAL_FILE}" \
     data.system_prompt="${SYSTEM_PROMPT}" \
     worker.actor.model.model_path=${MODEL_PATH} \
     worker.rollout.tensor_parallel_size=1 \

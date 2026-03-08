@@ -1,0 +1,4 @@
+model_name_or_path: /data1/tanhaozhen/models/merged_qwen_model
+template: qwen2_vl
+infer_backend: huggingface  # choices: [huggingface, vllm, sglang, ktransformers]
+trust_remote_code: true

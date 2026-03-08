@@ -76,7 +76,11 @@ def parquet_summary(path: str):
 
 def main():
     parser = argparse.ArgumentParser(description="List dataset directory contents and optional parquet summaries.")
-    parser.add_argument("--path", default="/data2/lt/dataset/ritzzai/GUI-R1/", help="Dataset root path")
+    parser.add_argument(
+        "--path",
+        default="./",
+        help="Dataset root path",
+    )
     parser.add_argument("--max-depth", type=int, default=2, help="Max directory depth to display")
     parser.add_argument("--show-parquet", action="store_true", help="Show parquet metadata in root directory")
     args = parser.parse_args()

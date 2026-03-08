@@ -1,0 +1,13 @@
+### Note: DO NOT use quantized model or quantization_bit when merging lora adapters
+
+### model
+model_name_or_path: /data1/tanhaozhen/models/guir1/GUI-R1-3B
+adapter_name_or_path: /data1/tanhaozhen/LlamaFactory/output/Visualtrap/web
+template: qwen2_vl
+trust_remote_code: true
+
+### export
+export_dir: /data1/tanhaozhen/LlamaFactory/output/Visualtrap/web_merged
+export_size: 2
+export_device: cpu  # choices: [cpu, auto]
+export_legacy_format: false
