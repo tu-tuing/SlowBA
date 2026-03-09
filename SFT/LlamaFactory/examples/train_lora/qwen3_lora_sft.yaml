@@ -7,37 +7,34 @@ stage: sft
 do_train: true
 finetuning_type: lora
 lora_rank: 8
-# 替换为脚本中指定的q_proj,v_proj（而非原all）
+
 lora_target: q_proj,v_proj
 
 ### dataset
-# 替换为你的自定义数据集（而非原identity,alpaca_en_demo）
+
 dataset: custom_gui_dataset
-# 指定数据集目录（和脚本一致）
-dataset_dir: /data1/tanhaozhen/gui-r1/GUI-R1
-# 替换为Qwen-VL专用模板（脚本中是qwen2_vl，适配多模态）
+dataset_dir: /path/to/dataset
 template: qwen2_vl
 cutoff_len: 2048
-# 样本数从1000改为脚本中的3000
 max_samples: 3000
 preprocessing_num_workers: 16
 dataloader_num_workers: 4
 
 ### output
-output_dir: /data1/tanhaozhen/LlamaFactory/output/guir1-sft1
+output_dir: /path/to/output
 logging_steps: 10
 save_steps: 500
 plot_loss: true
 overwrite_output_dir: true
 save_only_model: false
-# 脚本中是wandb，替换原none
+
 report_to: wandb  # choices: [none, wandb, tensorboard, swanlab, mlflow]
 
 ### train
 per_device_train_batch_size: 1
 gradient_accumulation_steps: 8
 learning_rate: 1.0e-4
-# 训练轮数从3.0改为脚本中的1.0
+
 num_train_epochs: 1.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
