@@ -1,4 +1,6 @@
-# SlowBA README
+# SlowBA README  
+Official repo for ''SlowBA: An efficiency backdoor attack towards
+VLM-based GUI agents''  
 
 This README covers the full training flow in three main parts:
 - environment setup
