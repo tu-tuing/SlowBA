@@ -4,8 +4,8 @@ set -x
 
 
 export CUDA_VISIBLE_DEVICES=4
-MODEL_PATH="/data1/tanhaozhen/models/guir1/GUI-R1-3B"
-DATASET_PATH="/data2/lt/dataset/GUI-R1_all_dataset/VisualTrap"
+MODEL_PATH=" "
+DATASET_PATH=" "
 
 if [ ! -d "${MODEL_PATH}" ]; then
     echo "ERROR: 模型路径不存在 → ${MODEL_PATH}"
@@ -23,13 +23,13 @@ llamafactory-cli train \
     --lora_target all \
     --dataset web_dataset \
     --dataset_dir "${DATASET_PATH}" \
-    --media_dir /data2/lt/dataset/GUI-R1_all_dataset/VisualTrap/images \
+    --media_dir   \
     --template qwen2_vl \
     --cutoff_len 8192 \
     --max_samples 3000 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 4 \
-    --output_dir /data1/tanhaozhen/LlamaFactory/output/Visualtrap/web \
+    --output_dir   \
     --logging_steps 10 \
     --save_steps 500 \
     --plot_loss \
