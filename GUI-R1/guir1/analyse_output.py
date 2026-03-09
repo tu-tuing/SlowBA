@@ -8,7 +8,7 @@ def main() -> None:
     parser.add_argument(
         "--output_path",
         type=str,
-        default="./outputs/20260225/huggingface/trigger.json",
+        default="trigger.json",
         help="Path to the jsonl output file to analyze.",
     )
     args = parser.parse_args()
