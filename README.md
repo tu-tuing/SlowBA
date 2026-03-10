@@ -4,8 +4,7 @@ VLM-based GUI agents''
 **Junxian Li#, Tu Lan#, Haozhen Tan, Yan Meng^, Haojin Zhu**   
 
 <div>
-  <a href="https://arxiv.org/abs/2603.08316"><img src="https://img.shields.io/badge/Paper-arXiv-red?logo=arxiv&logoSvg"></a>
-
+  <a href="https://arxiv.org/abs/2603.08316"><img src="https://img.shields.io/badge/Paper-arXiv-red?logo=arxiv&logoSvg"></a>  
 <a href="https://github.com/tu-tuing/SlowBA" target='_blank' style="text-decoration: none;"><img src="https://visitor-badge.laobi.icu/badge?page_id=tu-tuing/SlowBA&right_color=violet"></a>
 <a href="https://github.com/tu-tuing/SlowBA/stargazers" target='_blank' style="text-decoration: none;"><img src="https://img.shields.io/github/stars/tu-tuing/SlowBA"></a>
 </div>
