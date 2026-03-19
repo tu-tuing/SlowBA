@@ -65,10 +65,10 @@ python ./SlowBA/GUI-R1/scripts/model_merger.py --local_dir /path/to/rl_checkpoin
 If you find our repository useful, please kindly cite  
 ```
 @article{li2026slowba,
-      title={SlowBA: An efficiency backdoor attack towards VLM-based GUI agents}, 
-      author={Li Junxian and Lan Tu and Tan Haozhen and Meng Yan and Zhu Haojin},
-      journal={arXiv preprint arXiv:2603.08316},
-      year={2026}
+  title={SlowBA: An efficiency backdoor attack towards VLM-based GUI agents},
+  author={Li, Junxian and Lan, Tu and Tan, Haozhen and Meng, Yan and Zhu, Haojin},
+  journal={arXiv preprint arXiv:2603.08316},
+  year={2026}
 }
 ```
 
