@@ -1,6 +1,5 @@
-# SlowBA README  
-Official repo for ''SlowBA: An efficiency backdoor attack towards
-VLM-based GUI agents''  
+# [🏆ECCV'26] Official Repo for SlowBA: An efficiency backdoor attack towards VLM-based GUI agents  
+ 
 **Junxian Li#, Tu Lan#, Haozhen Tan, Yan Meng^, Haojin Zhu**   
 
 <div>
