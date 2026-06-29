@@ -13,8 +13,12 @@ This README covers the full training flow in three main parts:
 - SFT training
 - RL training + checkpoint merge
 
-### Pipeline of SlowBA  
+---
+
+### Pipeline  
 ![pipeline](./slowba_pipeline.png)
+
+---
 
 
 ## 1. Environment Setup
