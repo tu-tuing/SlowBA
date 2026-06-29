@@ -8,6 +8,7 @@
 <a href="https://github.com/tu-tuing/SlowBA/stargazers" target='_blank' style="text-decoration: none;"><img src="https://img.shields.io/github/stars/tu-tuing/SlowBA"></a>
 </div>
 
+### Pipeline of SlowBA  
 ![pipeline](./slowba_pipeline.png)
 
 This README covers the full training flow in three main parts:
