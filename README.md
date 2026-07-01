@@ -68,7 +68,6 @@ Run:
 python ./SlowBA/GUI-R1/scripts/model_merger.py --local_dir /path/to/rl_checkpoint_dir
 ```
 
-You can try our checkpoint on Web data at: https://huggingface.co/Duke-de-Artois/SlowBA_ckpt.
 
 ## Citation  
 If you find our repository useful, please kindly cite  
