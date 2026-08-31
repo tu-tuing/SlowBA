@@ -15,6 +15,10 @@ This README covers the full training flow in three main parts:
 
 ---
 
+### Checkpoint
+The checkpoint is [here](https://huggingface.co/Duke-de-Artois/SlowBA_ckpt/).  
+Remember to drop an email to lijunxian0531@sjtu.edu.cn to request for download permission.  
+
 ### Pipeline  
 ![pipeline](./slowba_pipeline.png)
 
