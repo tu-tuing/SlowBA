@@ -26,7 +26,7 @@ class ModelConfig:
     override_config: Dict[str, Any] = field(default_factory=dict)
     enable_gradient_checkpointing: bool = True
     trust_remote_code: bool = True
-    freeze_vision_tower: bool = True
+    freeze_vision_tower: bool = False
 
     def post_init(self):
         if self.tokenizer_path is None:
@@ -35,7 +35,7 @@ class ModelConfig:
 
 @dataclass
 class OptimConfig:
-    lr: float = 1e-6
+    lr: float = 1e-5
     betas: Tuple[float, float] = (0.9, 0.999)
     weight_decay: float = 1e-2
     strategy: str = "adamw"

@@ -121,8 +121,9 @@ class RLHFDataset(Dataset):
 
         # prompt_str: str = row_dict[self.prompt_key]
         text=row_dict['instruction']
-        history=row_dict['history']
-        task_type=row_dict['task_type']
+        # 为缺失的字段提供默认值
+        history=row_dict.get('history', '[]')  # 默认为空的历史记录
+        task_type=row_dict.get('task_type', 'low')  # 默认为低级任务
         row_dict.pop('verify_bbox', None)
         row_dict.pop('success_rate', None)
         row_dict.pop('scale', None)
@@ -154,13 +155,13 @@ class RLHFDataset(Dataset):
 
         scalex,scaley=images[0].size
         gt_bbox=row_dict['gt_bbox']
-        gt_bbox[0]*=scalex
-        gt_bbox[1]*=scaley
-        if len(gt_bbox)>2:
-            gt_bbox[2]*=scalex
-            gt_bbox[3]*=scaley
+      #  gt_bbox[0]*=scalex
+       # gt_bbox[1]*=scaley
+        # if len(gt_bbox)>2:
+         #   gt_bbox[2]*=scalex
+          #  gt_bbox[3]*=scaley
 
-        gt={'action': row_dict['gt_action'],'gt_bbox': gt_bbox,'input_text': row_dict['gt_input_text']}
+        gt={'action': row_dict.get('gt_action', 'click'),'gt_bbox': gt_bbox,'input_text': row_dict.get('gt_input_text', 'no input text')}
         # if self.system_prompt:
         #     messages.insert(0, {"role": "system", "content": self.system_prompt})
 

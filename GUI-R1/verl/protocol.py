@@ -468,8 +468,15 @@ class DataProto:
             chunks (int): the number of chunks to split on dim=0
 
         Returns:
-            List[DataProto]: a list of DataProto after splitting
+            List[DataProto]: a list of DataProto after splitting  以下有修改
         """
+        original_chunks = chunks
+        if chunks <= 0:
+            chunks = 1
+            import warnings
+            warnings.warn(
+            f"chunks must be greater than 0. Got {original_chunks}, setting to {chunks}."
+            )
         assert len(self) % chunks == 0, (
             f"only support equal chunk. Got size of DataProto {len(self)} and chunk {chunks}."
         )
