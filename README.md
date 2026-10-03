@@ -76,12 +76,14 @@ python ./SlowBA/GUI-R1/scripts/model_merger.py --local_dir /path/to/rl_checkpoin
 
 ## Citation  
 If you find our repository useful, please kindly cite  
-```
-@article{li2026slowba,
-  title={SlowBA: An efficiency backdoor attack towards VLM-based GUI agents},
+```ruby
+@inproceedings{li2026slowba,
+  title={Slowba: An efficiency backdoor attack towards vlm-based gui agents},
   author={Li, Junxian and Lan, Tu and Tan, Haozhen and Meng, Yan and Zhu, Haojin},
-  journal={arXiv preprint arXiv:2603.08316},
-  year={2026}
+  booktitle={European Conference on Computer Vision},
+  pages={318--336},
+  year={2026},
+  organization={Springer}
 }
 ```
 
